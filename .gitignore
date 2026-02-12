@@ -1,0 +1,6 @@
+.vscode
+backups
+jarfiles
+servers
+dns.conf
+*.txt
