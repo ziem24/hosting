@@ -1,3 +1,3 @@
-#!/bin/sh
-
-echo OOO >&2
+init() {
+    echo OOO >&2
+}

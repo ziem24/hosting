@@ -5,6 +5,7 @@ backups="$ROOT_DIR/backups"
 servers="$ROOT_DIR/servers"
 src="$ROOT_DIR/src"
 config="$ROOT_DIR/main.conf"
+versions="$ROOT_DIR/versions.txt"
 
 choices_num=$(cat "$src/command_chooser.txt" | wc -l)
 
@@ -12,40 +13,15 @@ mkdir -p "$backups" "$servers"
 
 if [ ! -e "$config" ]
 then
-	cp "$src/main.conf.empty" "$ROOT_DIR/main.conf"
-	. "$ROOT_DIR/main.conf"
+	cp "$src/main.conf.empty" "$config"
 fi
 
-list_servers() {
-	local i=0
-	for s in "$servers"/*
-	do
-		i=$(expr "$i" + 1)
-		echo "    $i) $(basename $s)"
-	done
-}
+. "$config"
+for function in $src/*.sh
+do
+	. "$function"
+done
 
-
-get_server() {
-	local server_idx=0
-	echo "Choose a server:"
-	list_servers
-	echo "    q) Cancel choice"
-
-	until  [ "$server_idx" = "q" ] || ([ "$server_idx" -ge 1 ] 2>/dev/null && [ "$server_idx" -le $(ls "$servers" | wc -l) ] 2>/dev/null)
-	do
-		read -p "    > " server_idx
-		: "${server_idx:=0}"
-	done
-
-	server=""
-	if [ "$server_idx" != "q" ]
-	then
-		server=$(ls "$servers" | head -n "$server_idx" | tail -1)
-	fi
-}
-
-. ./main.conf
 
 echo "===================================================
 
@@ -84,7 +60,7 @@ do
 			get_server
 			if [ "$server" != "" ]
 			then
-				backups=$backups servers=$servers "$src/backup.sh" "$server"
+				backup "$server"
 			fi
 			;;
 		"5")  # todo
@@ -94,26 +70,26 @@ do
 			echo "Public IP address: $(curl -s ifconfig.me)"
 			;;
 		"7")
-			config="$config" "$src/duckdns.sh"
+			duckdns
 			;;
 		"8")
 			"$edit" "$config" || echo "Editor is not configured properly" >&2
-			. "$ROOT_DIR/main.conf"
+			. "$config"
 			;;
 		"9")
 			read -p "Are you sure you want to reset your configuration file? [y/N]: " choice
 			if [ "$choice" = "y" ]
 			then
-				cp "$src/main.conf.empty" "$ROOT_DIR/main.conf"
-				. "$ROOT_DIR/main.conf"
+				cp "$src/main.conf.empty" "$config"
+				. "$config"
 			fi
 			;;
 		"10")
-			"$src/fetch_versions.sh" > "$ROOT_DIR/versions.txt" && echo "Fetched to 'versions.txt'"
+			fetch_versions > "$ROOT_DIR/versions.txt" && echo "Fetched to 'versions.txt'"
 			;;
 		"11")
 			read -p "Choose version: " version
-			config="$config" "$src/download.sh" "$version"
+			download "$version"
 			;;
 		"q")
 			echo "Okay bye"

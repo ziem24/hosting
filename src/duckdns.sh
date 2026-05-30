@@ -1,7 +1,6 @@
-#!/bin/sh
+duckdns() {
+    local addr=$(curl -s ifconfig.me)
+    local response=$(curl -k -s "https://www.duckdns.org/update?domains=$domain&token=$token&ip=$addr")
 
-. "$config"
-addr=$(curl -s ifconfig.me)
-
-response=$(curl -k -s "https://www.duckdns.org/update?domains=$domain&token=$token&ip=$addr")
-echo "DuckDNS response: $response"
+    echo "DuckDNS response: $response"
+}
