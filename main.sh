@@ -1,23 +1,26 @@
 #!/bin/sh
 
-ROOT_DIR=$(cd "$(dirname "$0")" && pwd)
-backups="$ROOT_DIR/backups"
-servers="$ROOT_DIR/servers"
-src="$ROOT_DIR/src"
-config="$ROOT_DIR/main.conf"
-versions="$ROOT_DIR/versions.txt"
+ROOT=$(cd "$(dirname "$0")" && pwd)
+backups="$ROOT/backups"
+servers="$ROOT/servers"
+src="$ROOT/src"
+config="$ROOT/main.conf"
+versions="$ROOT/versions.txt"
 
-choices_num=$(cat "$src/command_chooser.txt" | wc -l)
+empty_config="$src/main_empty.conf"
+command_chooser="$src/command_chooser.txt"
+
+num_choices=$(expr $(cat "$src/command_chooser.txt" | wc -l) - 3)
 
 mkdir -p "$backups" "$servers"
 
 if [ ! -e "$config" ]
 then
-	cp "$src/main.conf.empty" "$config"
+	cp "$empty_config" "$config"
 fi
 
 . "$config"
-for function in $src/*.sh
+for function in "$src"/*.sh
 do
 	. "$function"
 done
@@ -31,46 +34,37 @@ Ziemcorp INTERACTIVE COPYRIGHT 2026
 
 while true
 do
-	echo 	"==================================================="
-	echo 	"Choose a command: "
-	cat 	"$src/command_chooser.txt"
-	echo 	"    q) Finish work, I'm going to bed."
-	until [ "$choice" = "q" ] || ([ "$choice" -ge 1 ] 2>/dev/null && [ "$choice" -le "$choices_num" ] 2>/dev/null) # || [ "$choice" = "h" ]
+	cat 	"$command_chooser"
+	until [ "$choice" = "q" ] || ([ "$choice" -ge 1 ] 2>/dev/null && [ "$choice" -le "$num_choices" ] 2>/dev/null)
 	do
-		read -p "    >  " choice
+		read -p "    > " choice
 	done
 	echo 	"==================================================="
 	echo
 	case $choice in
 		"1")
 			echo "List of servers in the $(basename $servers) directory:"
-			list_servers
+			fn_list_servers
 			;;
 		"2")
-			get_server
-			if [ "$server" != "" ]
-			then
-				backups=$backups servers=$servers "$src/start.sh" "$server"
-			fi
+			fn_get_server
+			[ "$server" = "" ] || fn_start "$server"
 			;;
 		"3")  # todo
-			echo "OOO" >&2
+			fn_init
 			;;
 		"4")
-			get_server
-			if [ "$server" != "" ]
-			then
-				backup "$server"
-			fi
+			fn_get_server
+			[ "$server" = "" ] || fn_backup "$server"
 			;;
 		"5")  # todo
-			echo "OOO" >&2
+			fn_load_from_backup
 			;;
 		"6")
 			echo "Public IP address: $(curl -s ifconfig.me)"
 			;;
 		"7")
-			duckdns
+			fn_duckdns
 			;;
 		"8")
 			"$edit" "$config" || echo "Editor is not configured properly" >&2
@@ -80,16 +74,16 @@ do
 			read -p "Are you sure you want to reset your configuration file? [y/N]: " choice
 			if [ "$choice" = "y" ]
 			then
-				cp "$src/main.conf.empty" "$config"
+				cp "$empty_config" "$config"
 				. "$config"
 			fi
 			;;
 		"10")
-			fetch_versions > "$ROOT_DIR/versions.txt" && echo "Fetched to 'versions.txt'"
+			fn_fetch_versions > "$versions" && echo "Fetched to $(basename $versions)"
 			;;
 		"11")
 			read -p "Choose version: " version
-			download "$version"
+			fn_download "$version"
 			;;
 		"q")
 			echo "Okay bye"

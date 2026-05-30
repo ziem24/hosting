@@ -1,4 +1,4 @@
-list_servers() {
+fn_list_servers() {
 	local i=0
 	for s in "$servers"/*
 	do

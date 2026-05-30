@@ -1,3 +1,5 @@
+===================================================
+Choose a command:
     1) List servers
     2) Start a server
     3) Initialize a new server (OOO)
@@ -9,3 +11,4 @@
     9) Reset the configuration file
    10) Fetch all archived versions from mcversions.net
    11) Download a server jar from mcversions.net
+    q) Finish work, I'm going to bed.
