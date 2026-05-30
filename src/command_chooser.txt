@@ -1,0 +1,11 @@
+    1) List servers
+    2) Start a server
+    3) Initialize a new server (OOO)
+    4) Create a backup
+    5) Load a backup (OOO)
+    6) Show public IP address
+    7) Configure DNS resolution with DuckDNS
+    8) Edit the configuration file
+    9) Reset the configuration file
+   10) Fetch all archived versions from mcversions.net
+   11) Download a server jar from mcversions.net

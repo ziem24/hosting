@@ -2,5 +2,5 @@
 backups
 jarfiles
 servers
-dns.conf
-*.txt
+main.conf
+versions.txt

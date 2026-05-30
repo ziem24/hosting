@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. "$dns_conf"
+. "$config"
 addr=$(curl -s ifconfig.me)
 
 response=$(curl -k -s "https://www.duckdns.org/update?domains=$domain&token=$token&ip=$addr")

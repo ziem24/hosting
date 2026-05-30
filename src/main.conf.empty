@@ -1,0 +1,11 @@
+# The domain name of your server
+domain=
+
+# The token tied to your domain name, provided by DuckDNS
+token=
+
+# Where to download files
+download_dir=~/Downloads
+
+# What text editor to use for main.conf
+edit=nano
