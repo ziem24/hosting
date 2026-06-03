@@ -15,8 +15,9 @@ fn_start() {
 	local oldpwd=$(pwd)
 	cd "$servers/$1"
 	echo "Starting server '$1'
-	Stop the server using 'stop'
-	==================================================="
+Stop the server using 'stop'
+===================================================
+"
 
 	./run.sh || ./start.sh  # forge + fabric compatibility
 	local exitc=$?
