@@ -32,7 +32,7 @@ This is a CLI tool for managing self-hosted Minecraft servers more easily. Has l
 - It is important to agree to EULA after installing a server, the easiest way to do this is by typing `sed -i s/false/true/g eula.txt`
 
 ### 2.2. Running the script
-Doing `./main.sh` is the easiest way to handle it. Some scripts may require editing the `main.conf` file which you can also do through the CLI.
+Doing `./main.sh` is the easiest way to handle it. Some scripts may require editing the `hosting.conf` file which you can also do through the CLI.
 
 ## 3. Files and directories
 - Backups directory: where the backups are saved by default

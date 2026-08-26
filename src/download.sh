@@ -2,7 +2,7 @@ fn_download() {
 	if [ ! -e "$versions" ]
 	then
 		echo "Versions text file not found, fetching..."
-		fetch_versions 1>"$versions"
+		fn_fetch_versions 1>"$versions"
 	fi
 
 	if ! cat "$versions" | grep -q -x "$1"

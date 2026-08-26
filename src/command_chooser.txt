@@ -4,7 +4,7 @@ Choose a command:
     2) Start a server
     3) Initialize a new server (OOO)
     4) Create a backup
-    5) Load a backup (OOO)
+    5) Load a backup
     6) Show public IP address
     7) Configure DNS resolution with DuckDNS
     8) Edit the configuration file

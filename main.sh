@@ -4,10 +4,10 @@ ROOT=$(cd "$(dirname "$0")" && pwd)
 backups="$ROOT/backups"
 servers="$ROOT/servers"
 src="$ROOT/src"
-config="$ROOT/main.conf"
+config="$ROOT/hosting.conf"
 versions="$ROOT/versions.txt"
 
-empty_config="$src/main_empty.conf"
+empty_config="$src/hosting_empty.conf"
 command_chooser="$src/command_chooser.txt"
 
 num_choices=$(expr $(cat "$src/command_chooser.txt" | wc -l) - 3)
@@ -34,7 +34,7 @@ Ziemcorp INTERACTIVE COPYRIGHT 2026
 
 while true
 do
-	cat 	"$command_chooser"
+	cat "$command_chooser"
 	until [ "$choice" = "q" ] || ([ "$choice" -ge 1 ] 2>/dev/null && [ "$choice" -le "$num_choices" ] 2>/dev/null)
 	do
 		read -p "    > " choice
@@ -57,11 +57,11 @@ do
 			fn_get_server
 			[ "$server" = "" ] || fn_backup "$server"
 			;;
-		"5")  # todo
+		"5")
 			fn_load_from_backup
 			;;
 		"6")
-			echo "Public IP address: $(curl -s ifconfig.me)"
+		    echo "Public IP address: $(curl -s ifconfig.me || echo Unknown)"
 			;;
 		"7")
 			fn_duckdns
