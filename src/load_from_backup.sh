@@ -1,12 +1,14 @@
 fn_load_from_backup() {
-    local backup=0
     local num_backups=$(ls "$backups" | wc -l)
-    local backup_=""
     local backup_idx=""
 
     fn_get_server
     echo "Choose a server backup:"
-    fn_list_backups "$server"
+    if ! fn_list_backups "$server"
+    then
+        echo "    No backups available for this server." >& 2
+        return 1
+    fi
     echo "    q) Cancel choice"
 
     until [ "$backup_idx" = "q" ] || ([ "$backup_idx" -ge 1 ] 2>/dev/null && [ "$backup_idx" -le "$num_backups" ] 2>/dev/null)
@@ -20,10 +22,12 @@ fn_load_from_backup() {
         return 0
     fi
 
-    backup=$(basename $(ls "$backups" | head -n "$backup_idx" | tail -1) ".zip")
-    if [ -d "$servers/$backup" ]
+    local backup=$(basename $(ls "$backups/$server" | head -n "$backup_idx" | tail -1) ".zip")
+    local backup_name="$server"_"$backup" # Doing "$server_$backup" won't work because why would it
+
+    if [ -d "$servers/$backup_name" ]
     then
-        read -p "The server name '$backup' already exists. Overwrite it? [y/N]: " choice
+        read -p "The server name '$backup_name' already exists. Overwrite it? [y/N]: " choice
         if [ "x$choice" != "xy" ]
         then
             echo "Action cancelled."
@@ -31,10 +35,10 @@ fn_load_from_backup() {
         fi
     fi
 
-    mkdir -p "$ROOT/temp" && cd "$ROOT/temp"
-    unzip "$backups/$backup" && mv * "$servers/$backup"
-    cd "$ROOT"
-    rm -rf "$ROOT/temp"
+    mkdir -p "$ROOT/temp"
+    unzip "$backups/$server/$backup" -d "$ROOT/temp"
+    mv -f "$ROOT"/temp/* "$servers/$backup_name"
+    rmdir "$ROOT/temp"
 
-    echo "Loaded backup as $backup."
+    echo "Loaded backup as $backup_name."
 }

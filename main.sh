@@ -19,6 +19,8 @@ then
 	cp "$empty_config" "$config"
 fi
 
+rmdir "$backups/*" 2>/dev/null
+
 . "$config"
 for function in "$src"/*.sh
 do

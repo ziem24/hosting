@@ -9,8 +9,9 @@ fn_backup() {
 	do
 		if [ -d "$servers/$1" ]
 		then
-			local zipname="$1_$(date +'%Y-%m-%d_%H-%M-%S').zip"
-			zip -r "$backups/$zipname" "$servers/$1/" && echo "Backup saved as '$zipname'"
+			local zipname="$(date +'%Y-%m-%d_%H-%M-%S').zip"
+			mkdir -p "$backups/$1/"
+			zip -r "$backups/$1/$zipname" "$servers/$1/" && echo "Backup saved as '$zipname'"
 		else
 			echo "Server does not exist. Available servers:" >&2
 			echo $(ls $servers) >&2
