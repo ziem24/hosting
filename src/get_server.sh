@@ -3,7 +3,7 @@ fn_get_server() {
 	local num_servers=$(ls "$servers" | wc -l)
 
 	echo "Choose a server:"
-	fn_list_servers
+	fn_list_dir "$servers" || { echo "No servers available. Cancelling" >&2; return 1; }
 	echo "    q) Cancel choice"
 
 	until [ "$server_idx" = "q" ] || ([ "$server_idx" -ge 1 ] 2>/dev/null && [ "$server_idx" -le "$num_servers" ] 2>/dev/null)

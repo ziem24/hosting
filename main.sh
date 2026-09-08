@@ -45,8 +45,8 @@ do
 	echo
 	case $choice in
 		"1")
-			echo "List of servers in the $(basename $servers) directory:"
-			fn_list_servers
+			echo "List of servers in the $(basename "$servers") directory:"
+			fn_list_dir "$servers" || echo "Empty directory!"
 			;;
 		"2")
 			fn_get_server
@@ -84,8 +84,8 @@ do
 			fn_fetch_versions > "$versions" && echo "Fetched to $(basename $versions)"
 			;;
 		"11")
-			read -p "Choose version: " version
-			fn_download "$version"
+			read -p "Choose version [q - cancel]: " version
+			[ "x$version" = "xq" ] && echo "Action cancelled" || fn_download "$version"
 			;;
 		"q")
 			echo "Okay bye"

@@ -3,10 +3,15 @@ fn_load_from_backup() {
     local backup_idx=""
 
     fn_get_server
-    echo "Choose a server backup:"
-    if ! fn_list_backups "$server"
+    if [ "$server" = "" ]
     then
-        echo "    No backups available for this server." >& 2
+        return 0
+    fi
+
+    echo "Choose a server backup:"
+    if ! fn_list_dir "$backups/$server"
+    then
+        echo "No backups available for this server." >&2
         return 1
     fi
     echo "    q) Cancel choice"
